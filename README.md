@@ -1,9 +1,7 @@
-# chitr
-chitr — A smart terminal launcher for images, videos, and audio. Detects file type, lets you pick GUI or CLI apps, and automatically falls back if one fails. Pure Bash, zero dependencies.
-
 # 🖼️ chitr
 
 **A smart terminal tool to open images, videos, and audio files – quickly and easily.**
+chitr — A smart terminal launcher for images, videos, and audio. Detects file type, lets you pick GUI or CLI apps, and automatically falls back if one fails. Pure Bash, zero dependencies.
 
 You type the file name, and chitr figures out what kind of file it is. Then it opens it with the best app available. If that app fails, it automatically tries another one. No more guessing which player works.
 
@@ -33,7 +31,10 @@ cd chitr
 chmod +x chitr
 sudo cp chitr /usr/local/bin/
 
-## Or download directly:
+**Or download directly:**
+
 curl -sSL https://raw.githubusercontent.com/USERNAME/chitr/main/chitr -o chitr
 chmod +x chitr
-sudo mv chitr /usr/local/bin/
+sudo mv chitr /usr/local/bin/```
+
+## 🚀 Installation
