@@ -8,6 +8,33 @@ _ai='\033[1;34m'
 _aj='\033[1m'
 _ao='\033[2m'
 _ag='\033[0m'
+
+_mac=0
+[[ "$(uname -s 2>/dev/null)" == "Darwin" ]] && _mac=1
+
+if (( _mac )) && { (( BASH_VERSINFO[0] < 4 )) || { (( BASH_VERSINFO[0] == 4 )) && (( BASH_VERSINFO[1] < 3 )); }; }; then
+    echo -e "${_ap}chitr needs Bash 4.3+, but this shell is $BASH_VERSION.${_ag}"
+    echo -e "${_ad}macOS ships an old default bash. Run: brew install bash${_ag}"
+    echo -e "${_ad}Then re-open your terminal (or run: exec \$(brew --prefix)/bin/bash).${_ag}"
+fi
+
+_mac_open() {
+    local token="$1" file="$2"
+    case "$token" in
+        preview) open -a "Preview" "$file" ;;
+        quicktime) open -a "QuickTime Player" "$file" ;;
+        *) "$token" "$file" ;;
+    esac
+}
+
+_is_avail() {
+    local app="$1"
+    case "$app" in
+        preview|quicktime) (( _mac )) && return 0 || return 1 ;;
+        *) command -v "$app" &>/dev/null ;;
+    esac
+}
+
 _g=("feh" "geeqie" "eog" "gthumb" "nomacs" "gwenview" "qview" "shotwell" "xnviewmp" "gimp")
 _f=("jp2a" "chafa" "cacaview" "catimg" "img2sixel" "viu" "timg" "w3m")
 _i=("vlc" "mpv" "celluloid" "totem" "smplayer" "parole" "kaffeine" "mplayer")
@@ -15,6 +42,13 @@ _h=("mpv" "mplayer" "vlc")
 _e=("vlc" "audacious" "rhythmbox" "clementine" "lollypop" "elisa" "deadbeef")
 _d=("mpv" "mplayer" "mpg123" "ffplay")
 _m=("jp2a" "chafa" "cacaview" "mpv")
+
+if (( _mac )); then
+    _g=("preview" "${_g[@]}")
+    _i=("quicktime" "${_i[@]}")
+    _e=("quicktime" "${_e[@]}")
+fi
+
 _y="jpg|jpeg|png|gif|bmp|webp|tiff|tif|svg|ico|heic"
 _z="mp4|mkv|avi|webm|mov|flv|wmv|m4v|mpg|mpeg|3gp"
 _x="mp3|wav|flac|ogg|m4a|aac|wma|opus|aiff|ape"
@@ -44,12 +78,14 @@ echo ""
 return 1
 }
 _n() {
-if command -v apt &>/dev/null; then echo "apt"
+if (( _mac )) && command -v brew &>/dev/null; then echo "brew"
+elif command -v apt &>/dev/null; then echo "apt"
 elif command -v dnf &>/dev/null; then echo "dnf"
 elif command -v yum &>/dev/null; then echo "yum"
 elif command -v pacman &>/dev/null; then echo "pacman"
 elif command -v zypper &>/dev/null; then echo "zypper"
 elif command -v apk &>/dev/null; then echo "apk"
+elif command -v brew &>/dev/null; then echo "brew"
 else echo ""
 fi
 }
@@ -61,6 +97,7 @@ yum) echo "yum install -y" ;;
 pacman) echo "pacman -S --noconfirm" ;;
 zypper) echo "zypper install -y" ;;
 apk) echo "apk add" ;;
+brew) echo "brew install" ;;
 *) echo "" ;;
 esac
 }
@@ -85,6 +122,7 @@ echo "$app"
 esac
 }
 _v() {
+[[ "$1" == "brew" ]] && { echo ""; return; }
 [[ $EUID -ne 0 ]] && echo "sudo " || echo ""
 }
 _ah() {
@@ -93,7 +131,7 @@ echo ""
 local mgr prefix sudo_prefix
 mgr="$(_n)"
 prefix="$(_b "$mgr")"
-sudo_prefix="$(_v)"
+sudo_prefix="$(_v "$mgr")"
 if [[ -z "$mgr" ]]; then
 echo -e "${_ap}Could not detect your package manager.${_ag}"
 echo "Please install manually: ${_m[*]}"
@@ -247,7 +285,7 @@ _ac() {
 local app="$1" file="$2"
 local errfile
 errfile="$(mktemp)"
-"$app" "$file" &>"$errfile" &
+_mac_open "$app" "$file" &>"$errfile" &
 local pid=$!
 sleep 0.5
 if kill -0 "$pid" 2>/dev/null; then
@@ -365,13 +403,13 @@ local list_name="$1" file="$2" interface="$3" media="$4"
 local -n apps="$list_name"
 local installed=()
 for app in "${apps[@]}"; do
-command -v "$app" &>/dev/null && installed+=("$app")
+_is_avail "$app" && installed+=("$app")
 done
 if [[ ${#installed[@]} -eq 0 ]]; then
 local mgr_name mgr sudo_prefix pkg
 mgr_name="$(_n)"
 mgr="$(_b "$mgr_name")"
-sudo_prefix="$(_v)"
+sudo_prefix="$(_v "$mgr_name")"
 pkg="$(_o "${apps[0]}" "$mgr_name")"
 echo -e "${_ap}No supported app is installed for this.${_ag}"
 echo "Options from this list:"
