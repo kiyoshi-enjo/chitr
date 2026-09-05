@@ -44,7 +44,30 @@ If the preferred application isn't installed or fails to open the file, `chitr` 
   No heavy dependencies, no background services.
 
 ---
+**Sample Preview**
+---
+<img width="500" height="330" alt="Screenshot_2026-09-05_19-40-17" src="https://github.com/user-attachments/assets/0e328620-7ac7-47b6-8d30-134dc1b7b40f" width="10" height="10" />
 
+---
+**Sample Direct Photo View**
+---
+<img width="500" height="600" alt="Screenshot_2026-09-05_19-46-59" src="https://github.com/user-attachments/assets/13d437d5-3c66-45e8-96ea-8cb9203326a1" height="10" width="10" />
+
+---
+**Sample Direct Video view**
+---
+<img width="500" height="400" alt="Web_Photo_Editor" src="https://github.com/user-attachments/assets/ce792a7f-2346-4d47-b389-1eb10be66084" />
+
+---
+**Sample Direct Audio view**
+---
+<img width="500" height="300" alt="Screenshot_2026-09-05_19-51-07" src="https://github.com/user-attachments/assets/8ac1295c-e96f-4f44-8fd1-c47d6cf508da" />
+
+---
+
+
+
+---
 # 🚀 Installation
 
 ## Quick Install (recommended)
