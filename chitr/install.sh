@@ -4,8 +4,8 @@
 # the matching file(s) from GitHub — not all three.
 
 set -e
-REPO_RAW="https://raw.githubusercontent.com/kiyoshi-enjo/chitr/main/chitr"
 
+REPO_RAW="https://raw.githubusercontent.com/kiyoshi-enjo/chitr/main/chitr"
 
 fetch() {
     local url="$1" dest="$2"
@@ -73,6 +73,25 @@ if [[ ${#INSTALLED[@]} -eq 0 ]]; then
     exit 1
 fi
 
+# ---- Enhanced ASCII art rating section ----
 echo "Done. Installed for: ${INSTALLED[*]}"
-echo "PLS Rate on github https://github.com/kiyoshi-enjo/chitr"
+echo ""
+
+# A small banner with "CHITR"
+echo "  ██████╗██╗  ██╗██╗████████╗██████╗ "
+echo " ██╔════╝██║  ██║██║╚══██╔══╝██╔══██╗"
+echo " ██║     ███████║██║   ██║   ██████╔╝"
+echo " ██║     ██╔══██║██║   ██║   ██╔══██╗"
+echo " ╚██████╗██║  ██║██║   ██║   ██║  ██║"
+echo "  ╚═════╝╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝"
+echo ""
+
+# A box with star rating request
+echo "  ╔══════════════════════════════════════════════════════╗"
+echo "  ║  ⭐  ⭐  ⭐ Please rate this project ⭐  ⭐  ⭐      ║"
+echo "  ║  https://github.com/kiyoshi-enjo/chitr              ║"
+echo "  ║  Your ⭐ makes a huge difference — thank you!       ║"
+echo "  ╚══════════════════════════════════════════════════════╝"
+echo ""
+
 echo "Open a new terminal and try: chitr --setup"
