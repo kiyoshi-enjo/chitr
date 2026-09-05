@@ -4,8 +4,8 @@
 # the matching file(s) from GitHub — not all three.
 
 set -e
+REPO_RAW="https://raw.githubusercontent.com/kiyoshi-enjo/chitr/main/chitr"
 
-REPO_RAW="https://raw.githubusercontent.com/kiyoshi-enjo/chitr/main"
 
 fetch() {
     local url="$1" dest="$2"
