@@ -316,7 +316,7 @@ Each shell (Bash, Zsh, Fish) runs its own dedicated implementation of this flow 
 
 If **chitr** is useful to you and you'd like to support its development, you can buy me a coffee! ☕❤️
 
-<a href="https://ko-fi.com/YOUR_USERNAME">
+<a href="https://kiyoshi-portfolio.web.app/coffee.html#home">
   <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Buy Me a Coffee">
 </a>
 
