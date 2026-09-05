@@ -52,7 +52,7 @@ If the preferred application isn't installed or fails to open the file, `chitr` 
 This single command detects which shell(s) are installed on your system (Bash, Zsh, and/or Fish) and downloads **only** the matching file(s) — not all three:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kiyoshi-enjo/chitr/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/kiyoshi-enjo/chitr/main/chitr/install.sh | bash
 ```
 
 It will:
