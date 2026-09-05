@@ -2,352 +2,113 @@
 
 **A smart terminal tool to open images, videos, and audio files — quickly and easily.**
 
-`chitr` is a lightweight Bash-based media opener that automatically detects whether a file is an **image, video, or audio**, then opens it using the best available application.
+`chitr` is a lightweight media opener for your terminal that automatically detects whether a file is an **image, video, or audio** — by reading its actual content, not just the extension — then opens it using the best available application.
 
 If the preferred application isn't installed or fails to open the file, `chitr` automatically falls back to another compatible application.
 
 **No guessing. No complicated configuration. Just open your media.**
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Platform: Linux](https://img.shields.io/badge/Platform-Linux-blue.svg)
-![Shell: Bash](https://img.shields.io/badge/Shell-Bash-4EAA25.svg)
+![Platform: Linux | macOS](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-blue.svg)
+![Shell: Bash | Zsh | Fish](https://img.shields.io/badge/Shell-Bash%20%7C%20Zsh%20%7C%20Fish-4EAA25.svg)
 
 ---
 
 ## ✨ Features
 
 * 🔍 **Automatic File Detection**
-  Detects images, videos, and audio using the `file` command or file extension.
+  Detects images, videos, and audio using the `file` command (real content, not just the extension) — falls back to extension matching only if `file` isn't available.
 
 * 🖥️ **GUI & Terminal Support**
-  Choose between graphical applications and terminal-based viewers/players.
+  Choose between graphical applications and terminal-based viewers/players, presented in a clean, colorful selection menu every time — no assumptions carried over from your last choice.
 
 * 🔄 **Smart Fallback System**
-  If one application fails, `chitr` automatically tries another compatible application.
+  If one application fails, `chitr` automatically tries another compatible application. Known quirks (like `mpv`'s harmless EOF exit code, or `ffplay`'s multi-Ctrl+C hard-exit code) are recognized so a real stop is never mistaken for a crash.
+
+* 🐚 **Bash, Zsh & Fish Support**
+  `chitr` runs natively in all three shells — each with a dedicated, purpose-built version (not a compatibility shim), since the three shells differ enough (hooks, array semantics) that a single script can't cover all of them.
+
+* 🍎 **macOS Support**
+  Detects macOS automatically, prioritizes native apps (**Preview**, **QuickTime Player**), and uses Homebrew for installing anything else.
 
 * ⌨️ **Shell Integration**
-  With shell integration enabled, you can simply type a media filename and let `chitr` handle the rest.
+  With shell integration enabled, you can simply type a media filename and let `chitr` handle the rest. The explicit `chitr <file>` command always works too, regardless of shell hook conflicts.
 
-* 📦 **Automatic Setup**
-  Use `--setup` to install recommended applications through your system's package manager.
+* 📦 **One-Line Install**
+  A single installer detects which shell(s) you actually have and downloads only the file(s) you need — nothing you won't use.
 
 * 📋 **Application Manager**
-  Use `--list` to see which supported applications are installed and which are missing.
+  Use `--list` to see which supported applications are installed and which are missing, across all three media types.
 
 * ⚡ **Lightweight & Fast**
-  Written entirely in Bash with no heavy dependencies.
-
-* 🐧 **Linux First**
-  Designed specifically for Linux systems.
+  No heavy dependencies, no background services.
 
 ---
 
 # 🚀 Installation
----
 
-## 🐧 Ubuntu / Debian / Linux Mint
+## Quick Install (recommended)
 
-### 1. Install Git
-
-```bash
-sudo apt update
-sudo apt install git -y
-```
-
-### 2. Clone the Repository
+This single command detects which shell(s) are installed on your system (Bash, Zsh, and/or Fish) and downloads **only** the matching file(s) — not all three:
 
 ```bash
-git clone https://github.com/kiyoshi-enjo/chitr.git
-cd chitr
+curl -fsSL https://raw.githubusercontent.com/kiyoshi-enjo/chitr/main/install.sh | bash
 ```
 
-### 3. Make the Script Executable
+It will:
+- Detect Bash / Zsh / Fish on your system
+- Download only the relevant script(s) to your home directory
+- Wire them into the correct shell config (`.bashrc`, `.zshrc`, or `config.fish`)
+- Make them executable
 
-```bash
-chmod +x chitr.sh
-```
-
-### 4. Copy `chitr.sh`
-
-```bash
-cp chitr.sh ~/.chitr.sh
-```
-
-### 5. Add chitr to Bash
-
-```bash
-echo 'source ~/.chitr.sh' >> ~/.bashrc
-```
-
-### 6. Reload Bash
-
-```bash
-source ~/.bashrc
-```
-
-### 7. Run Setup
+Open a new terminal and run:
 
 ```bash
 chitr --setup
 ```
 
+This installs a solid default toolkit (`jp2a`, `chafa`, `cacaview` for images; `mpv` for video/audio).
+
 ---
 
-## 🎩 Fedora
+## Manual Install (git clone)
 
-### 1. Install Git
-
-```bash
-sudo dnf install git -y
-```
-
-### 2. Clone the Repository
+If you'd rather inspect the code first or don't want to pipe `curl` into `bash`:
 
 ```bash
 git clone https://github.com/kiyoshi-enjo/chitr.git
 cd chitr
+chmod +x install.sh
+./install.sh
 ```
 
-### 3. Make the Script Executable
+`install.sh` runs the same shell-detection logic locally instead of over the network — same result, no download step.
 
-```bash
-chmod +x chitr.sh
-```
+### Installing Git, if you don't have it
 
-### 4. Copy `chitr.sh`
-
-```bash
-cp chitr.sh ~/.chitr.sh
-```
-
-### 5. Add chitr to Bash
-
-```bash
-echo 'source ~/.chitr.sh' >> ~/.bashrc
-```
-
-### 6. Reload Bash
-
-```bash
-source ~/.bashrc
-```
-
-### 7. Run Setup
-
-```bash
-chitr --setup
-```
+| Distro | Command |
+|---|---|
+| Ubuntu / Debian / Mint | `sudo apt install git -y` |
+| Fedora / RHEL / Rocky / Alma | `sudo dnf install git -y` |
+| Arch / Manjaro / EndeavourOS | `sudo pacman -Sy git` |
+| openSUSE | `sudo zypper install git` |
+| Alpine | `sudo apk add git` |
+| macOS | `brew install git` |
 
 ---
 
-## 🏹 Arch Linux / Manjaro / EndeavourOS
+## macOS Notes
 
-### 1. Install Git
-
-```bash
-sudo pacman -Sy git
-```
-
-### 2. Clone the Repository
+macOS ships an old default Bash (3.2) that `chitr` can't run on. If you use Bash on Mac:
 
 ```bash
-git clone https://github.com/kiyoshi-enjo/chitr.git
-cd chitr
+brew install bash
 ```
 
-### 3. Make the Script Executable
-
-```bash
-chmod +x chitr.sh
-```
-
-### 4. Copy `chitr.sh`
-
-```bash
-cp chitr.sh ~/.chitr.sh
-```
-
-### 5. Add chitr to Bash
-
-```bash
-echo 'source ~/.chitr.sh' >> ~/.bashrc
-```
-
-### 6. Reload Bash
-
-```bash
-source ~/.bashrc
-```
-
-### 7. Run Setup
-
-```bash
-chitr --setup
-```
-
----
-
-## 🦎 openSUSE
-
-### 1. Install Git
-
-```bash
-sudo zypper install git
-```
-
-### 2. Clone the Repository
-
-```bash
-git clone https://github.com/kiyoshi-enjo/chitr.git
-cd chitr
-```
-
-### 3. Make the Script Executable
-
-```bash
-chmod +x chitr.sh
-```
-
-### 4. Copy `chitr.sh`
-
-```bash
-cp chitr.sh ~/.chitr.sh
-```
-
-### 5. Add chitr to Bash
-
-```bash
-echo 'source ~/.chitr.sh' >> ~/.bashrc
-```
-
-### 6. Reload Bash
-
-```bash
-source ~/.bashrc
-```
-
-### 7. Run Setup
-
-```bash
-chitr --setup
-```
-
----
-
-## 🏢 RHEL / Rocky Linux / AlmaLinux
-
-### 1. Install Git
-
-```bash
-sudo dnf install git -y
-```
-
-### 2. Clone the Repository
-
-```bash
-git clone https://github.com/kiyoshi-enjo/chitr.git
-cd chitr
-```
-
-### 3. Make the Script Executable
-
-```bash
-chmod +x chitr.sh
-```
-
-### 4. Copy `chitr.sh`
-
-```bash
-cp chitr.sh ~/.chitr.sh
-```
-
-### 5. Add chitr to Bash
-
-```bash
-echo 'source ~/.chitr.sh' >> ~/.bashrc
-```
-
-### 6. Reload Bash
-
-```bash
-source ~/.bashrc
-```
-
-### 7. Run Setup
-
-```bash
-chitr --setup
-```
-
----
-
-## 🌀 Alpine Linux
-
-### 1. Install Git
-
-```bash
-sudo apk add git
-```
-
-### 2. Clone the Repository
-
-```bash
-git clone https://github.com/kiyoshi-enjo/chitr.git
-cd chitr
-```
-
-### 3. Make the Script Executable
-
-```bash
-chmod +x chitr.sh
-```
-
-### 4. Copy `chitr.sh`
-
-```bash
-cp chitr.sh ~/.chitr.sh
-```
-
-### 5. Add chitr to Bash
-
-```bash
-echo 'source ~/.chitr.sh' >> ~/.bashrc
-```
-
-### 6. Reload Bash
-
-```bash
-source ~/.bashrc
-```
-
-### 7. Run Setup
-
-```bash
-chitr --setup
-```
-
----
-
-## 🐧 Other Linux Distributions
-
-If your distribution is not listed above, make sure **Git** and **Bash** are installed, then run:
-
-```bash
-git clone https://github.com/kiyoshi-enjo/chitr.git
-cd chitr
-
-chmod +x chitr.sh
-
-cp chitr.sh ~/.chitr.sh
-
-echo 'source ~/.chitr.sh' >> ~/.bashrc
-
-source ~/.bashrc
-
-chitr --setup
-```
+If you use Zsh (the default shell on modern macOS), no extra step is needed — `chitr`'s Zsh version works out of the box once installed.
 
 🎉 **That's it! chitr is ready to use.**
+
 ---
 
 ## 📦 Usage
@@ -360,7 +121,7 @@ chitr video.mp4
 chitr song.mp3
 ```
 
-`chitr` automatically determines the file type and selects a suitable application.
+Or, with shell integration, just type the filename directly:
 
 ```bash
 photo.jpg
@@ -368,42 +129,51 @@ video.mp4
 song.mp3
 ```
 
+`chitr` automatically determines the file type and shows a menu:
+
+```
+🖼  Image detected: photo.jpg
+
+╭──────────────────────────────────╮
+│  1) GUI  =  In App                │
+│  2) CLI  =  In Trmnl              │
+╰──────────────────────────────────╯
+Choose [1/2]:
+```
+
 ### Available Commands
 
 ```bash
 chitr --setup
 ```
-
-Install recommended applications.
+Install recommended default applications.
 
 ```bash
 chitr --list
 ```
-
-Show installed and missing applications.
+Show installed and missing applications, by category.
 
 ```bash
 chitr --help
 ```
-
 Show the help menu.
 
 ---
 
 ## ⌨️ Shell Integration
 
-Once shell integration is enabled, you can open a media file directly by typing its filename:
+Once installed, you can open a media file directly by typing its filename — no `chitr` prefix needed:
 
 ```bash
 $ photo.jpg
 ```
 
-Instead of manually choosing an image viewer, `chitr` detects the file and opens it automatically.
+This works in **Bash, Zsh, and Fish**. A couple of notes depending on your shell:
 
-Shell integration is intended to work with:
+- **Bash / Zsh:** if something else on your system (like the `command-not-found` package on Debian/Ubuntu/Kali) also hooks into unknown commands, `chitr` automatically re-asserts itself before every prompt, so this keeps working regardless of load order.
+- **Fish:** typing a bare filename works, but fish will also print its own harmless "command not found" message afterward — this is a fish design limitation (its hook doesn't fully suppress the default message), not a chitr bug. It only affects the bare-filename shortcut.
 
-* Bash
-* Zsh
+If you ever run into any issue with the bare-filename shortcut in any shell, `chitr <file>` always works as a guaranteed fallback.
 
 ---
 
@@ -411,88 +181,27 @@ Shell integration is intended to work with:
 
 ## 🖼️ Images
 
-### GUI
+**GUI:** `feh` `geeqie` `eog` `gthumb` `nomacs` `gwenview` `qview` `shotwell` `xnviewmp` `gimp` *(+ `Preview` on macOS)*
 
-```text
-feh
-geeqie
-eog
-gthumb
-nomacs
-gwenview
-qview
-shotwell
-xnviewmp
-gimp
-```
-
-### Terminal / CLI
-
-```text
-jp2a
-chafa
-cacaview
-catimg
-img2sixel
-viu
-timg
-w3m
-```
-
----
+**Terminal / CLI:** `jp2a` `chafa` `cacaview` `catimg` `img2sixel` `viu` `timg` `w3m`
 
 ## 🎬 Videos
 
-### GUI
+**GUI:** `vlc` `mpv` `celluloid` `totem` `smplayer` `parole` `kaffeine` `mplayer` *(+ `QuickTime Player` on macOS)*
 
-```text
-vlc
-mpv
-celluloid
-totem
-smplayer
-parole
-kaffeine
-mplayer
-```
-
-### Terminal / CLI
-
-```text
-mpv
-mplayer
-vlc
-```
-
----
+**Terminal / CLI:** `mpv` `mplayer` `vlc` *(rendered in-terminal via `tct`/`caca` output)*
 
 ## 🎵 Audio
 
-### GUI
+**GUI:** `vlc` `audacious` `rhythmbox` `clementine` `lollypop` `elisa` `deadbeef` *(+ `QuickTime Player` on macOS)*
 
-```text
-vlc
-audacious
-rhythmbox
-clementine
-lollypop
-elisa
-deadbeef
-```
+**Terminal / CLI:** `mpv` `mplayer` `mpg123` `ffplay`
 
-### Terminal / CLI
+Only apps that are actually installed are ever shown or used — everything else is skipped silently.
 
-```text
-mpv
-mplayer
-mpg123
-ffplay
-```
 ---
 
 # 📋 Check Available Apps
-
-To see which applications are currently installed:
 
 ```bash
 chitr --list
@@ -501,31 +210,32 @@ chitr --list
 Example:
 
 ```text
-Images
-────────────────────────────
-✓ feh
-✓ chafa
-✗ geeqie
-✓ gthumb
+Image — GUI:
+  ✔ feh
+  ✘ geeqie
+  ✔ gthumb
+  ...
 
-Videos
-────────────────────────────
-✓ mpv
-✓ vlc
-✗ celluloid
+Image — CLI:
+  ✔ jp2a
+  ✔ chafa
+  ✔ cacaview
+  ...
 
-Audio
-────────────────────────────
-✓ mpv
-✗ mpg123
-✓ ffplay
+Video — CLI:
+  ✔ mpv
+  ✘ mplayer
+  ✘ vlc
+
+Audio — CLI:
+  ✔ mpv
+  ✘ mpg123
+  ✔ ffplay
 ```
 
 ---
 
 # 🧠 How It Works
-
-The basic workflow is simple:
 
 ```text
                  ┌──────────────┐
@@ -535,6 +245,7 @@ The basic workflow is simple:
                         ▼
                ┌─────────────────┐
                │ Detect File Type│
+               │ (real MIME type)│
                └────────┬────────┘
                         │
           ┌─────────────┼─────────────┐
@@ -543,45 +254,34 @@ The basic workflow is simple:
           │             │             │
           ▼             ▼             ▼
       Find Apps      Find Apps      Find Apps
+      (installed      (installed     (installed
+       only)           only)          only)
           │             │             │
           └─────────────┼─────────────┘
                         ▼
-                Open With Best App
+              1 found → open directly
+              2+ found → ask which one
+              0 found → suggest install
                         │
                         ▼
                  App Fails?
                    /       \
-                 No         Yes
-                 │           │
-                 ▼           ▼
-                Done     Try Fallback
+                 No         Yes (real failure,
+                 │           not a user stop)
+                 ▼           │
+                Done         ▼
+                        Try next installed app
 ```
+
+Each shell (Bash, Zsh, Fish) runs its own dedicated implementation of this flow — the logic is equivalent, but hooks, arrays, and syntax are native to each shell rather than emulated.
 
 ---
 
 # 🔮 Coming Soon
 
-Planned features include:
-
-* 🍎 Support for MAC
-
-* ⚙️ Config file support
-
-  * `~/.config/chitr/config`
-
-* 🔍 Fuzzy finder integration
-
-  * `fzf`
-
-* 📂 Open multiple files at once
-
-* 🌐 Open URLs directly
-
 * 🧩 Plugin system for new file types
 
 * 🕘 Recently opened file history
-
-* 🐚 Improved Bash & Zsh & fish shell completions
 
 * 🎨 Custom application priority
 
@@ -597,14 +297,14 @@ If **chitr** is useful to you and you'd like to support its development, you can
   <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Buy Me a Coffee">
 </a>
 
-Your support helps keep the project maintained and motivates me to build more useful tools for Linux and terminal users.
+Your support helps keep the project maintained and motivates me to build more useful tools for Linux, macOS, and terminal users.
 
 **Other ways to support:**
 
 * ⭐ Star the repository
 * 🐛 Report bugs
 * 💡 Suggest new features
-* 📢 Share `chitr` with other Linux users
+* 📢 Share `chitr` with other terminal users
 
 Thank you for supporting open-source! ❤️
 
@@ -614,7 +314,7 @@ If you found a bug, have an idea, or need help using `chitr`, you can use one of
 
 Please open a GitHub Issue and include:
 
-* Linux distribution
+* OS and shell (e.g. "Ubuntu 24.04, Bash" or "macOS Sonoma, Zsh")
 * `chitr` version
 * File type
 * Command you used
@@ -622,8 +322,6 @@ Please open a GitHub Issue and include:
 * Relevant terminal output
 
 ### 💡 Feature Requests
-
-Have an idea that could make `chitr` better?
 
 Open a feature request on GitHub and describe:
 
