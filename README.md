@@ -353,7 +353,7 @@ Open a feature request on GitHub and describe:
 * How you think it could work
 
 ### 💬 Community Support
-![Uploading star_repo.gif…]()
+<img width="450" height="97" alt="star_repo" src="https://github.com/user-attachments/assets/a9a5634a-5577-47e6-884a-0aa1784d5ee9" />
 
 For quick questions, discussions, and general help, join the Telegram community:
 
